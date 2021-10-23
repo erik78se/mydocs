@@ -2,6 +2,11 @@
 
 nginx config with loadbalancer ssl
 
+After adding config, add a symlink to the file in */etc/nginx/sites-enabled*
+
+my-site -> /etc/nginx/sites-available/my-site
+
+
 ```
 server {
   listen 9966 ssl;
