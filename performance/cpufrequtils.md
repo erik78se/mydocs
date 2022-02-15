@@ -1,6 +1,8 @@
 # Disable ondemand and configure scaling_govenor
 Prevent CPU to go down in performance... May cause throttling events. Check fans.
 
+READ also: https://ixnfo.com/en/changing-cpu-scaling-governor-on-linux.html
+
 BIOS must allow the OS to assume control over this. For example on HPE servers 
 in the BIOS, you must enable Collaborative Power Control (CPC). It might be different on other servers.
 
