@@ -8,4 +8,4 @@ The following upgrades the controller and all models after.
     done
 
 ### Show models with their names
-    juju models --format json | jq -r '.models[] | .["model-uuid"] + " " + .["name"]'
+    juju models --all --format json | jq -r '.models[] | .["model-uuid"] + " " + .["name"]'
