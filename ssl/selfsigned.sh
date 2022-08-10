@@ -1,36 +1,38 @@
 #!/bin/sh
 #
+# First argument: email address
+#
 # Generate self signed certs for hostname -f
 #
 # Generate self signed root CA cert
 
-openssl req -nodes -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=root/CN=`hostname -f`/emailAddress=erik.lonroth@gmail.com"
+_email=$1
+_hostname=`hostname -f`
 
+openssl req -nodes -x509 -newkey rsa:2048 -keyout ${_hostname}_CA.key -out ${_hostname}_CA.crt -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=root/CN=${_hostname}/emailAddress=${_email}"
 
 # Generate server cert to be signed
-openssl req -nodes -newkey rsa:2048 -keyout server.key -out server.csr -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=server/CN=`hostname -f`/emailAddress=erik.lonroth@gmail.com"
+openssl req -nodes -newkey rsa:2048 -keyout ${_hostname}_server.key -out ${_hostname}_server.csr -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=server/CN=${_hostname}/emailAddress=${_email}"
 
 # Sign the server cert
-openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt
+openssl x509 -req -in ${_hostname}_server.csr -CA ${_hostname}_CA.crt -CAkey ${_hostname}_CA.key -CAcreateserial -out ${_hostname}_server.crt
 
 # Create server PEM file
-cat server.key server.crt > server.pem
-
+cat ${_hostname}_server.key ${_hostname}_server.crt > ${_hostname}_server.pem
 
 # Generate client cert to be signed
-openssl req -nodes -newkey rsa:2048 -keyout client.key -out client.csr -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=client/CN=`hostname -f`/emailAddress=erik.lonroth@gmail.com"
+openssl req -nodes -newkey rsa:2048 -keyout ${_hostname}_client.key -out ${_hostname}_client.csr -subj "/C=SE/ST=STO/L=Stockholm/O=haproxy/OU=client/CN=${_hostname}/emailAddress=${_email}"
 
 # Sign the client cert
-openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAserial ca.srl -out client.crt
+openssl x509 -req -in ${_hostname}_client.csr -CA ${_hostname}_CA.crt -CAkey ${_hostname}_CA.key -CAserial ${_hostname}_CA.srl -out ${_hostname}_client.crt
 
 # Create client PEM file
-cat client.key client.crt > client.pem
-
+cat ${_hostname}_client.key ${_hostname}_client.crt > ${_hostname}_client.pem
 
 # Create clientPFX file (for Java, C#, etc)
-# openssl pkcs12 -inkey client.key -in client.crt -export -out client.pfx
+# openssl pkcs12 -inkey ${_hostname}_client.key -in ${_hostname}_client.crt -export -out ${_hostname}_client.pfx
 
-printf "Server cert: %s \n" server.crt
-printf "Server pem: %s \n" server.pem
-printf "Client cert: %s \n" client.crt
-printf "Client pem %s \n" client.pem
+printf "Server cert: %s \n" ${_hostname}_server.crt
+printf "Server pem: %s \n" ${_hostname}_server.pem
+printf "Client cert: %s \n" ${_hostname}_client.crt
+printf "Client pem %s \n" ${_hostname}_client.pem
