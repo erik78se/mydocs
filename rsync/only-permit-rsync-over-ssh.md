@@ -9,3 +9,17 @@ Setup ssh such as that it only allows rsync and not login.
     
 # rsync your test file
 rsync -auve 'ssh -i /home/erik/rrsync/id_rsa -o IdentitiesOnly=yes' test foo@192.168.2.212:
+
+# Setup /etc/rsyncd.conf
+
+cat /etc/rsyncd.conf
+
+    [nextcloud-backup]
+    path = /home/ubuntu/backups/
+    hosts allow = 192.168.111.142/32
+    hosts deny = *
+    list = true
+    uid = ubuntu
+    gid = ubuntu
+    read only = false
+    use chroot = false
