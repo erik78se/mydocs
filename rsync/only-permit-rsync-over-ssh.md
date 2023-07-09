@@ -14,7 +14,7 @@ rsync -auve 'ssh -i /home/erik/rrsync/id_rsa -o IdentitiesOnly=yes' test foo@192
 
 cat /etc/rsyncd.conf
 
-    [nextcloud-backup]
+    [backups]
     path = /home/ubuntu/backups/
     hosts allow = 192.168.111.142/32
     hosts deny = *
