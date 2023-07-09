@@ -23,3 +23,12 @@ cat /etc/rsyncd.conf
     gid = ubuntu
     read only = false
     use chroot = false
+
+## Run setcap
+Then also make sure to setcap, if you get this kind of error:
+
+*Jul  9 08:29:33 juju-91d004-0 rsyncd[1250533]: rsync: [Receiver] setgroups failed: Operation not permitted (1)*
+
+    setcap cap_net_bind_service,cap_setgid=+ep /usr/bin/rsync
+
+See: https://askubuntu.com/questions/919724/rsync-error-setgroup-failed
